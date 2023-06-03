@@ -148,16 +148,20 @@
 }
 
 .main-article ul {
-  @apply max-w-md list-inside list-disc space-y-1 pl-3;
+  @apply list-inside list-disc space-y-1 pl-3;
 }
 
 .main-article ol {
-  @apply max-w-md list-inside list-decimal space-y-1 pl-3;
+  @apply list-inside list-decimal space-y-1 pl-3;
 }
 
 .main-article s {
   @apply rounded bg-neutral-100 text-pink-500 no-underline dark:bg-neutral-800;
   padding: 1px 2px;
+}
+
+.main-article img {
+  @apply w-full rounded-xl drop-shadow-xl;
 }
 
 @layer utilities {
