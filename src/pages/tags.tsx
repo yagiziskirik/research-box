@@ -6,7 +6,7 @@
 import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
-import { getSession, signIn,useSession } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 
 import Button from '@/components/buttons/Button';
 import Wrapper from '@/components/wrapper';
@@ -22,18 +22,20 @@ interface RetTag {
 
 const getOnlyTags = (el: Post[]) => {
   const returnList: TagsType[] = [];
-  const mappedList = el
-    .map((a) => a.tags)
-    .reduce(function (a, b) {
-      return a.concat(b);
+  if (el.length > 0) {
+    const mappedList = el
+      .map((a) => a.tags)
+      .reduce(function (a, b) {
+        return a.concat(b);
+      });
+    const uniqueKeys = [...new Set(mappedList)];
+    uniqueKeys.forEach((q) => {
+      returnList.push({
+        name: q,
+        count: mappedList.filter((x) => x == q).length,
+      });
     });
-  const uniqueKeys = [...new Set(mappedList)];
-  uniqueKeys.forEach((q) => {
-    returnList.push({
-      name: q,
-      count: mappedList.filter((x) => x == q).length,
-    });
-  });
+  }
   return returnList;
 };
 
