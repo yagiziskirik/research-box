@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { signIn, signOut,useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 import Button from '../buttons/Button';
 import Dropdown from '../Dropdown';
@@ -38,11 +38,13 @@ export default function Header() {
                 </Link>
               </li>
             ))}
-            {session ? (
-              <Button onClick={() => signOut()}>Logout</Button>
-            ) : (
-              <Button onClick={() => signIn()}>Login</Button>
-            )}
+            <li>
+              {session ? (
+                <Button onClick={() => signOut()}>Logout</Button>
+              ) : (
+                <Button onClick={() => signIn()}>Login</Button>
+              )}
+            </li>
           </ul>
           <Dropdown
             links={links}
