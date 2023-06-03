@@ -112,9 +112,9 @@ export default function Posts({ post }: DraftType) {
                   <div className='pt-6'>
                     <Link
                       className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
-                      href='/blog'
+                      href='/posts'
                     >
-                      ← Back to the blog
+                      ← Back to the researches
                     </Link>
                   </div>
                 </footer>

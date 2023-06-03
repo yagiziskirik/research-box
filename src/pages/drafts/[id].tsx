@@ -5,11 +5,21 @@
 
 import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
+import clipboard from 'clipboardy';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
 import { ChangeEvent, useState } from 'react';
-import { HiCheck, HiEye, HiEyeOff, HiPencil, HiSave } from 'react-icons/hi';
+import { YoutubeTranscript } from 'youtube-transcript';
+import {
+  HiChat,
+  HiCheck,
+  HiClipboardCopy,
+  HiEye,
+  HiEyeOff,
+  HiPencil,
+  HiSave,
+} from 'react-icons/hi';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
 
@@ -40,6 +50,10 @@ export default function Draft(draft: DraftType) {
       ? draft.draft.tags.map((tagNew) => ({ id: tagNew, text: tagNew }))
       : []
   );
+
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const [copyText, setCopyText] = useState('');
+  const [buttonCopy, setButtonCopy] = useState(false);
 
   const handleDelete = (i: number) => {
     setTags(tags.filter((_, index) => index !== i));
@@ -112,6 +126,40 @@ export default function Draft(draft: DraftType) {
     });
   };
 
+  const getTranscription = async () => {
+    if (buttonLoading) {
+      alert('Another process is ongoing', 'warning');
+    }
+    setButtonLoading(true);
+    try {
+      const cp = await clipboard.read();
+      const resp = await fetch('/api/transcript', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: cp }),
+      });
+      if (resp.status === 200) {
+        const jsonData = await resp.json();
+        setCopyText(jsonData);
+        setButtonLoading(false);
+        setButtonCopy(true);
+        alert('Prompt is ready to copy', 'info');
+      } else {
+        setButtonLoading(false);
+        alert("Couldn't parse YouTube url", 'error');
+      }
+    } catch (err) {
+      setButtonLoading(false);
+      alert('You need to allow pasting.', 'error');
+    }
+  };
+
+  const copyPrompt = async () => {
+    await clipboard.write(copyText);
+    setButtonCopy(false);
+    alert('Paste prompt to ChatGPT', 'info');
+  };
+
   const savePage = async () => {
     const body = {
       id: router.query.id,
@@ -158,7 +206,7 @@ export default function Draft(draft: DraftType) {
                   onClick={toggleEditHeader}
                 ></IconButton>
               </div>
-              <div className='flex items-center space-x-3'>
+              <div className='ml-5 flex items-center space-x-3'>
                 <p>Published</p>
                 <IconButton
                   icon={isLive ? HiEye : HiEyeOff}
@@ -191,8 +239,32 @@ export default function Draft(draft: DraftType) {
             />
           </div>
           <Editor content={content} setContent={setContent} />
-          <div className='flex justify-end'>
-            <Button leftIcon={HiSave} className='mt-14' onClick={savePage}>
+          <div className='mt-24 flex justify-end gap-2 md:mt-14'>
+            <Button
+              leftIcon={
+                buttonLoading
+                  ? undefined
+                  : buttonCopy
+                  ? HiClipboardCopy
+                  : HiChat
+              }
+              onClick={buttonCopy ? copyPrompt : getTranscription}
+              variant='dark'
+            >
+              {buttonLoading ? (
+                <div className='lds-ellipsis'>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              ) : buttonCopy ? (
+                'Copy'
+              ) : (
+                'ChatGPT Prompt'
+              )}
+            </Button>
+            <Button leftIcon={HiSave} onClick={savePage}>
               Save
             </Button>
           </div>
