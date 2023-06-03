@@ -1,11 +1,11 @@
 import { AppProps } from 'next/app';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
-
-import '@/styles/globals.css';
 // !STARTERCONF This is for demo purposes, remove @/styles/colors.css import immediately
 // import '@/styles/colors.css';
 import { SessionProvider } from 'next-auth/react';
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+import '@/styles/globals.css';
 
 /**
  * !STARTERCONF info

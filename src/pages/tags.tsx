@@ -3,12 +3,13 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import Wrapper from '@/components/wrapper';
-import { GetServerSideProps } from 'next';
 import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
-import { getSession, useSession, signIn } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
+import { getSession, signIn,useSession } from 'next-auth/react';
+
 import Button from '@/components/buttons/Button';
+import Wrapper from '@/components/wrapper';
 
 interface TagsType {
   name: string;
@@ -20,7 +21,7 @@ interface RetTag {
 }
 
 const getOnlyTags = (el: Post[]) => {
-  let returnList: TagsType[] = [];
+  const returnList: TagsType[] = [];
   const mappedList = el
     .map((a) => a.tags)
     .reduce(function (a, b) {

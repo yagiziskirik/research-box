@@ -3,19 +3,20 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import Wrapper from '@/components/wrapper';
-import IconButton from '@/components/buttons/IconButton';
-import Button from '@/components/buttons/Button';
-import Editor from '@/components/Editor';
-import prisma from 'lib/prisma';
-import { useState, ChangeEvent } from 'react';
-import { getSession, useSession, signIn } from 'next-auth/react';
 import { Post } from '@prisma/client';
-import { useRouter } from 'next/router';
+import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
-import { HiPencil, HiCheck, HiEye, HiEyeOff, HiSave } from 'react-icons/hi';
+import { useRouter } from 'next/router';
+import { getSession, signIn, useSession } from 'next-auth/react';
+import { ChangeEvent, useState } from 'react';
+import { HiCheck, HiEye, HiEyeOff, HiPencil, HiSave } from 'react-icons/hi';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
+
+import Button from '@/components/buttons/Button';
+import IconButton from '@/components/buttons/IconButton';
+import Editor from '@/components/Editor';
+import Wrapper from '@/components/wrapper';
 
 type DraftType = {
   draft: Post;
@@ -59,10 +60,6 @@ export default function Draft(draft: DraftType) {
 
     // re-render
     setTags(newTags);
-  };
-
-  const handleTagClick = (index: number) => {
-    console.log('The tag at index ' + index + ' was clicked');
   };
 
   const { data: session } = useSession();
@@ -116,7 +113,6 @@ export default function Draft(draft: DraftType) {
   };
 
   const savePage = async () => {
-    console.log(session);
     const body = {
       id: router.query.id,
       header: editableHeader,
@@ -191,7 +187,6 @@ export default function Draft(draft: DraftType) {
               handleDelete={handleDelete}
               handleAddition={handleAddition}
               handleDrag={handleDrag}
-              handleTagClick={handleTagClick}
               autocomplete
             />
           </div>

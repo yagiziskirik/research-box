@@ -3,15 +3,16 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import prisma from 'lib/prisma';
-import Wrapper from '@/components/wrapper';
-import Button from '@/components/buttons/Button';
-import { GetServerSideProps } from 'next';
-import { getSession, useSession, signIn } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useState, ChangeEvent } from 'react';
 import { Post } from '@prisma/client';
+import prisma from 'lib/prisma';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import { getSession, signIn, useSession } from 'next-auth/react';
+import { ChangeEvent, useState } from 'react';
+
 import ArticleCard from '@/components/articleCard';
+import Button from '@/components/buttons/Button';
+import Wrapper from '@/components/wrapper';
 
 type DraftType = {
   posts: Post[];
@@ -21,7 +22,7 @@ const POST_PER_PAGE = 5;
 
 const capitalise = (str: string) => {
   const arr = str.split(' ');
-  for (var i = 0; i < arr.length; i++) {
+  for (let i = 0; i < arr.length; i++) {
     arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
   }
   const str2 = arr.join(' ');
@@ -85,6 +86,7 @@ export default function Posts({ posts }: DraftType) {
           {finalPosts.map(({ id, createdAt, header, explanation, tags }) => (
             <ArticleCard
               id={id}
+              key={id}
               publishDate={createdAt}
               header={header}
               explanation={explanation}

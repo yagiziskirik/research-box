@@ -4,6 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import prisma from '../../../lib/prisma';
 
 export default async function handler(
@@ -11,8 +12,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.body.user) {
-    console.log('received');
-    console.log(req.method);
     if (req.method === 'POST') {
       const { id, header, explanation, content, user, tags, isLive } = req.body;
       const doesExist = await prisma.post.findUnique({
@@ -51,7 +50,6 @@ export default async function handler(
       }
     }
     if (req.method === 'DELETE') {
-      console.log('Delete received');
       const { id } = req.body;
       const result = await prisma.post.delete({
         where: {
@@ -61,7 +59,6 @@ export default async function handler(
       res.json(result);
     }
   } else {
-    console.log('Not Authorised');
     res.status(403).json('Not Authoroised');
   }
 }

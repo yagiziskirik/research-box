@@ -4,6 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import prisma from '../../../lib/prisma';
 
 export default async function handler(
@@ -19,7 +20,6 @@ export default async function handler(
     });
     res.json(result);
   } else {
-    console.log('Not Authorised');
     res.status(403).json('Not Authoroised');
   }
 }

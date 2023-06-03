@@ -3,14 +3,15 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import prisma from 'lib/prisma';
-import Wrapper from '@/components/wrapper';
-import Button from '@/components/buttons/Button';
-import Link from 'next/link';
-import { GetServerSideProps } from 'next';
 import { Post, User } from '@prisma/client';
+import prisma from 'lib/prisma';
 import moment from 'moment';
+import { GetServerSideProps } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 import { HiMail } from 'react-icons/hi';
+
+import Wrapper from '@/components/wrapper';
 
 type PostType = Post & { user: User };
 
@@ -54,9 +55,11 @@ export default function Posts({ post }: DraftType) {
                     <ul className='flex justify-center space-x-8 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8'>
                       <li className='flex items-center space-x-2'>
                         <span>
-                          <img
+                          <Image
                             alt='avatar'
                             src={post.user.image as string}
+                            width={10}
+                            height={10}
                             decoding='async'
                             data-nimg='intrinsic'
                             className='h-10 w-10 rounded-full'
@@ -98,6 +101,7 @@ export default function Posts({ post }: DraftType) {
                           <Link
                             className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase'
                             href={'/tags/' + tag}
+                            key={tag}
                           >
                             {tag}
                           </Link>

@@ -3,8 +3,8 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useRef } from 'react';
 import { HiOutlineExclamation } from 'react-icons/hi';
 
 interface Props {

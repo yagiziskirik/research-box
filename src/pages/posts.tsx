@@ -3,14 +3,15 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import prisma from 'lib/prisma';
-import Wrapper from '@/components/wrapper';
-import Button from '@/components/buttons/Button';
-import { GetServerSideProps } from 'next';
-import { getSession, useSession, signIn } from 'next-auth/react';
 import { Post } from '@prisma/client';
-import { useState, ChangeEvent } from 'react';
+import prisma from 'lib/prisma';
+import { GetServerSideProps } from 'next';
+import { getSession, signIn, useSession } from 'next-auth/react';
+import { ChangeEvent, useState } from 'react';
+
 import ArticleCard from '@/components/articleCard';
+import Button from '@/components/buttons/Button';
+import Wrapper from '@/components/wrapper';
 
 type DraftType = {
   posts: Post[];
@@ -74,6 +75,7 @@ export default function Posts({ posts }: DraftType) {
           {finalPosts.map(({ id, createdAt, header, explanation, tags }) => (
             <ArticleCard
               id={id}
+              key={id}
               publishDate={createdAt}
               header={header}
               explanation={explanation}

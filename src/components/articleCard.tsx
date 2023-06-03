@@ -3,11 +3,12 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import { HiOutlineEye } from 'react-icons/hi';
 import moment from 'moment';
-import IconButton from './buttons/IconButton';
 import Link from 'next/link';
+import { HiOutlineEye } from 'react-icons/hi';
 import { HiTrash } from 'react-icons/hi';
+
+import IconButton from './buttons/IconButton';
 
 interface Props {
   id: string;
@@ -31,7 +32,7 @@ export default function ArticleCard({
   published,
   postOrDraft,
   isDelete = false,
-  deleteFunc = () => {},
+  deleteFunc,
   indexPage,
 }: Props) {
   return (

@@ -4,16 +4,17 @@
 // https://opensource.org/licenses/MIT
 
 import dynamic from 'next/dynamic';
+
 import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 interface Props {
-  content: String;
+  content: string;
   setContent: (value: string) => void;
 }
 
 export default function Editor({ content, setContent }: Props) {
-  var toolbarOptions = [
+  const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'], // toggled buttons
     ['blockquote', 'code-block'],
     ['link', 'image'],

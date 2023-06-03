@@ -3,10 +3,10 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { HiMenuAlt3 } from 'react-icons/hi';
 import Link from 'next/link';
+import { Fragment } from 'react';
+import { HiMenuAlt3 } from 'react-icons/hi';
 
 interface LinksProp {
   href: string;

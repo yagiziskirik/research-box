@@ -3,11 +3,12 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import Seo from './Seo';
+import { ReactNode } from 'react';
+
 import Header from './layout/Header';
 import Layout from './layout/Layout';
 import UnderlineLink from './links/UnderlineLink';
-import { ReactNode } from 'react';
+import Seo from './Seo';
 
 interface Props {
   children: ReactNode;
