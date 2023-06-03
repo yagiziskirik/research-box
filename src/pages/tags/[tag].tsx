@@ -13,6 +13,7 @@ import { ChangeEvent, useState } from 'react';
 import ArticleCard from '@/components/articleCard';
 import Button from '@/components/buttons/Button';
 import Wrapper from '@/components/wrapper';
+import Head from 'next/head';
 
 type DraftType = {
   posts: Post[];
@@ -51,6 +52,17 @@ export default function Posts({ posts }: DraftType) {
   const router = useRouter();
   return (
     <Wrapper>
+      <Head>
+        <meta
+          name='image'
+          property='og:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+        <meta
+          name='twitter:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+      </Head>
       {session ? (
         <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
           <div className='space-y-2 pb-8 pt-6 md:space-y-5'>

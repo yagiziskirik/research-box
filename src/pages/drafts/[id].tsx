@@ -10,7 +10,7 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
 import { ChangeEvent, useState } from 'react';
-import { YoutubeTranscript } from 'youtube-transcript';
+import Head from 'next/head';
 import {
   HiChat,
   HiCheck,
@@ -188,6 +188,17 @@ export default function Draft(draft: DraftType) {
 
   return (
     <Wrapper>
+      <Head>
+        <meta
+          name='image'
+          property='og:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+        <meta
+          name='twitter:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+      </Head>
       {session ? (
         <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
           <div className='space-y-2 pb-8 pt-6 md:space-y-5'>

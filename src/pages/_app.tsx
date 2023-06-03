@@ -3,9 +3,15 @@ import { AppProps } from 'next/app';
 // import '@/styles/colors.css';
 import { SessionProvider } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
+import Router from 'next/router';
+import { useEffect } from 'react';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/globals.css';
+
+NProgress.configure({ showSpinner: false });
 
 /**
  * !STARTERCONF info
@@ -13,6 +19,19 @@ import '@/styles/globals.css';
  */
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  useEffect(() => {
+    Router.events.on('routeChangeStart', (url) => {
+      NProgress.start();
+    });
+
+    Router.events.on('routeChangeError', (url) => {
+      NProgress.done(false);
+    });
+
+    Router.events.on('routeChangeComplete', (url) => {
+      NProgress.done(false);
+    });
+  }, [Router]);
   return (
     <>
       <SessionProvider session={session}>

@@ -4,12 +4,14 @@
 // https://opensource.org/licenses/MIT
 
 import { Post } from '@prisma/client';
+import Link from 'next/link';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
 import { getSession, signIn, useSession } from 'next-auth/react';
 
 import Button from '@/components/buttons/Button';
 import Wrapper from '@/components/wrapper';
+import Head from 'next/head';
 
 interface TagsType {
   name: string;
@@ -43,6 +45,17 @@ export default function Posts({ tags }: RetTag) {
   const { data: session } = useSession();
   return (
     <Wrapper>
+      <Head>
+        <meta
+          name='image'
+          property='og:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+        <meta
+          name='twitter:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+      </Head>
       {session ? (
         <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
           <div className='flex flex-col items-start justify-start divide-y divide-gray-200 dark:divide-gray-700 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0'>
@@ -54,19 +67,19 @@ export default function Posts({ tags }: RetTag) {
             <div className='flex max-w-lg flex-wrap'>
               {tags.map(({ name, count }) => (
                 <div className='mb-2 mr-5 mt-2' key={`${name}-${count}`}>
-                  <a
+                  <Link
                     className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase'
                     href={'/tags/' + name}
                   >
                     {name}
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className='-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300'
                     href={'/tags/' + name}
                   >
                     {' '}
                     ({count})
-                  </a>
+                  </Link>
                 </div>
               ))}
             </div>

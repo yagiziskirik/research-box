@@ -6,8 +6,8 @@
 import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
-import { getSession, signIn,useSession } from 'next-auth/react';
-import { ChangeEvent,useState } from 'react';
+import { getSession, signIn, useSession } from 'next-auth/react';
+import { ChangeEvent, useState } from 'react';
 import { HiPlus } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,6 +17,7 @@ import Button from '@/components/buttons/Button';
 import ButtonLink from '@/components/links/ButtonLink';
 import Modal from '@/components/Modal';
 import Wrapper from '@/components/wrapper';
+import Head from 'next/head';
 
 type DraftType = {
   drafts: Post[];
@@ -85,6 +86,17 @@ export default function Posts({ drafts }: DraftType) {
   };
   return (
     <Wrapper>
+      <Head>
+        <meta
+          name='image'
+          property='og:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+        <meta
+          name='twitter:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+      </Head>
       <Modal
         open={isModal}
         setOpen={modalToggle}

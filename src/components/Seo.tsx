@@ -10,11 +10,6 @@ const defaultMeta = {
   url: 'https://research-box.vercel.app',
   type: 'website',
   robots: 'follow, index',
-  /**
-   * No need to be filled, will be populated with openGraph function
-   * If you wish to use a normal image, just specify the path below
-   */
-  image: 'https://research-box.vercel.app/images/large-og.png',
 };
 
 type SeoProps = {
@@ -54,14 +49,12 @@ export default function Seo(props: SeoProps) {
       <meta property='og:site_name' content={meta.siteName} />
       <meta property='og:description' content={meta.description} />
       <meta property='og:title' content={meta.title} />
-      <meta name='image' property='og:image' content={meta.image} />
       {/* Twitter */}
       <meta name='twitter:card' content='summary_large_image' />
       {/* // !STARTERCONF Remove or change to your handle */}
       {/* <meta name='twitter:site' content='@th_clarence' /> */}
       <meta name='twitter:title' content={meta.title} />
       <meta name='twitter:description' content={meta.description} />
-      <meta name='twitter:image' content={meta.image} />
       {meta.date && (
         <>
           <meta property='article:published_time' content={meta.date} />
@@ -83,7 +76,7 @@ export default function Seo(props: SeoProps) {
       {favicons.map((linkProps) => (
         <link key={linkProps.href} {...linkProps} />
       ))}
-      <meta name='msapplication-TileColor' content='#ffffff' />
+      <meta name='msapplication-TileColor' content='#171717' />
       <meta name='msapplication-config' content='/favicon/browserconfig.xml' />
       <meta
         name='theme-color'

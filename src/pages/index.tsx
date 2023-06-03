@@ -2,12 +2,13 @@ import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import { getSession,useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import * as React from 'react';
 
 import ArticleCard from '@/components/articleCard';
 import ArrowLink from '@/components/links/ArrowLink';
 import Wrapper from '@/components/wrapper';
+import Head from 'next/head';
 
 type PostType = {
   posts: Post[];
@@ -17,6 +18,17 @@ export default function HomePage({ posts }: PostType) {
   const { data: session } = useSession();
   return (
     <Wrapper>
+      <Head>
+        <meta
+          name='image'
+          property='og:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+        <meta
+          name='twitter:image'
+          content='https://research-box.vercel.app/api/og'
+        />
+      </Head>
       {!session ? (
         <div
           className='layout relative flex flex-col items-center justify-center py-12 text-center'
