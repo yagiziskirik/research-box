@@ -5,6 +5,7 @@ import clsxm from '@/lib/clsxm';
 
 type NextImageProps = {
   useSkeleton?: boolean;
+  darkSrc?: string;
   imgClassName?: string;
   blurClassName?: string;
   alt: string;
@@ -21,6 +22,7 @@ type NextImageProps = {
  */
 export default function NextImage({
   useSkeleton = false,
+  darkSrc,
   src,
   width,
   height,
@@ -36,10 +38,14 @@ export default function NextImage({
   const widthIsSet = className?.includes('w-') ?? false;
 
   return (
-    <figure
+    <picture
       style={!widthIsSet ? { width: `${width}px` } : undefined}
       className={className}
     >
+      <source
+        srcSet={darkSrc ? darkSrc : src.toString()}
+        media='(prefers-color-scheme: dark)'
+      />
       <Image
         className={clsxm(
           imgClassName,
@@ -52,6 +58,6 @@ export default function NextImage({
         onLoadingComplete={() => setStatus('complete')}
         {...rest}
       />
-    </figure>
+    </picture>
   );
 }

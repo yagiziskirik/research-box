@@ -1,29 +1,53 @@
-import * as React from 'react';
-
-import UnstyledLink from '@/components/links/UnstyledLink';
+import Link from 'next/link';
+import Button from '../buttons/Button';
+import NextImage from '../NextImage';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import Dropdown from '../Dropdown';
 
 const links = [
-  { href: '/', label: 'Route 1' },
-  { href: '/', label: 'Route 2' },
+  { href: '/posts', label: 'Researches' },
+  { href: '/tags', label: 'Tags' },
+  { href: '/drafts', label: 'All Work' },
 ];
 
 export default function Header() {
+  const { data: session } = useSession();
   return (
-    <header className='sticky top-0 z-50 bg-white'>
-      <div className='layout flex h-14 items-center justify-between'>
-        <UnstyledLink href='/' className='font-bold hover:text-gray-600'>
-          Home
-        </UnstyledLink>
+    <header className='sticky top-0 z-50 bg-white dark:bg-neutral-900'>
+      <div className='layout mx-auto flex h-14 max-w-3xl items-center justify-between px-4 sm:px-6 xl:max-w-5xl xl:px-0'>
+        <Link href='/' className='text-white'>
+          <NextImage
+            src='/images/DarkLogo.png'
+            darkSrc='/images/WhiteLogo.png'
+            alt='Logo'
+            useSkeleton
+            width={150}
+            height={60}
+          />
+        </Link>
         <nav>
-          <ul className='flex items-center justify-between space-x-4'>
+          <ul className='hidden items-center justify-between space-x-4 md:flex'>
             {links.map(({ href, label }) => (
               <li key={`${href}${label}`}>
-                <UnstyledLink href={href} className='hover:text-gray-600'>
+                <Link
+                  href={href}
+                  className='text-neutral-600 dark:text-neutral-300'
+                >
                   {label}
-                </UnstyledLink>
+                </Link>
               </li>
             ))}
+            {session ? (
+              <Button onClick={() => signOut()}>Logout</Button>
+            ) : (
+              <Button onClick={() => signIn()}>Login</Button>
+            )}
           </ul>
+          <Dropdown
+            links={links}
+            signInOut={session ? signOut : signIn}
+            signInOutText={session ? 'Logout' : 'Login'}
+          />
         </nav>
       </div>
     </header>

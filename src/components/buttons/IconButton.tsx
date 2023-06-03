@@ -10,6 +10,7 @@ const IconButtonVariant = [
   'ghost',
   'light',
   'dark',
+  'danger',
 ] as const;
 
 type IconButtonProps = {
@@ -77,9 +78,16 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
               'active:bg-white/80 disabled:bg-gray-200',
             ],
             variant === 'dark' && [
-              'bg-gray-900 text-white',
-              'border border-gray-600',
-              'hover:bg-gray-800 active:bg-gray-700 disabled:bg-gray-700',
+              'bg-neutral-900 text-white',
+              'border border-neutral-600',
+              'hover:bg-neutral-800 active:bg-neutral-700 disabled:bg-neutral-700',
+            ],
+            variant === 'danger' && [
+              'text-red-500',
+              'border border-red-500',
+              'hover:bg-red-50 active:bg-red-100 disabled:bg-red-100',
+              isDarkBg &&
+                'hover:bg-red-900 active:bg-red-800 disabled:bg-red-800',
             ],
           ],
           //#endregion  //*======== Variants ===========

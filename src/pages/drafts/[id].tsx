@@ -1,0 +1,239 @@
+// Copyright (c) 2023 Yağız Işkırık
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
+import Wrapper from '@/components/wrapper';
+import IconButton from '@/components/buttons/IconButton';
+import Button from '@/components/buttons/Button';
+import Editor from '@/components/Editor';
+import prisma from 'lib/prisma';
+import { useState, ChangeEvent } from 'react';
+import { getSession, useSession, signIn } from 'next-auth/react';
+import { Post } from '@prisma/client';
+import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
+import { HiPencil, HiCheck, HiEye, HiEyeOff, HiSave } from 'react-icons/hi';
+import { WithContext as ReactTags } from 'react-tag-input';
+import { toast } from 'react-toastify';
+
+type DraftType = {
+  draft: Post;
+};
+
+const KeyCodes = {
+  comma: 188,
+  enter: 13,
+};
+
+interface TagType {
+  id: string;
+  text: string;
+}
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
+
+export default function Draft(draft: DraftType) {
+  const [tags, setTags] = useState(
+    draft.draft
+      ? draft.draft.tags.map((tagNew) => ({ id: tagNew, text: tagNew }))
+      : []
+  );
+
+  const handleDelete = (i: number) => {
+    setTags(tags.filter((_, index) => index !== i));
+  };
+
+  const handleAddition = (tag: TagType) => {
+    setTags([
+      ...tags,
+      { id: tag.id.toLowerCase(), text: tag.text.toLowerCase() },
+    ]);
+  };
+
+  const handleDrag = (tag: TagType, currPos: number, newPos: number) => {
+    const newTags = tags.slice();
+
+    newTags.splice(currPos, 1);
+    newTags.splice(newPos, 0, tag);
+
+    // re-render
+    setTags(newTags);
+  };
+
+  const handleTagClick = (index: number) => {
+    console.log('The tag at index ' + index + ' was clicked');
+  };
+
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [editableHeader, editHeader] = useState(
+    draft.draft ? draft.draft.header : 'New Draft'
+  );
+  let cachedHeader = editableHeader;
+  const [isEditHeader, isEditHeaderChange] = useState(false);
+  function headerChange(el: ChangeEvent<HTMLHeadingElement>) {
+    cachedHeader = el.target.textContent || '';
+  }
+  const toggleEditHeader = () => {
+    if (isEditHeader) editHeader(cachedHeader);
+    isEditHeaderChange(!isEditHeader);
+  };
+
+  const [editableExp, editExp] = useState(
+    draft.draft ? draft.draft.explanation : 'Explanation of the research'
+  );
+  let cachedExp = editableExp;
+  const [isEditExp, isEditExpChange] = useState(false);
+  function expChange(el: ChangeEvent<HTMLParagraphElement>) {
+    cachedExp = el.target.textContent || '';
+  }
+  const toggleEditExp = () => {
+    if (isEditExp) editExp(cachedExp);
+    isEditExpChange(!isEditExp);
+  };
+
+  const [content, setContent] = useState(
+    draft.draft ? draft.draft.content : ''
+  );
+  const [isLive, setIsLive] = useState(
+    draft.draft ? draft.draft.published : false
+  );
+  const toggleIsLive = () => {
+    setIsLive(!isLive);
+  };
+
+  const alert = (
+    msg: string,
+    type: 'warning' | 'success' | 'info' | 'error' | 'default'
+  ) => {
+    toast(msg, {
+      autoClose: 2000,
+      type: type,
+      theme: 'colored',
+      position: 'bottom-center',
+    });
+  };
+
+  const savePage = async () => {
+    console.log(session);
+    const body = {
+      id: router.query.id,
+      header: editableHeader,
+      explanation: editableExp,
+      content,
+      user: session?.user,
+      tags: tags.map((tag) => tag.text),
+      isLive,
+    };
+    try {
+      const res = await fetch('/api/senddraft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.status === 200) {
+        alert('Success!', 'success');
+      } else {
+        alert('An error occured', 'error');
+      }
+    } catch (err) {
+      alert(`${err}`, 'error');
+    }
+  };
+
+  return (
+    <Wrapper>
+      {session ? (
+        <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
+          <div className='space-y-2 pb-8 pt-6 md:space-y-5'>
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center space-x-5'>
+                <h1
+                  className='md:leading-14 draft-header text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl'
+                  contentEditable={isEditHeader}
+                  onInput={headerChange}
+                >
+                  {editableHeader}
+                </h1>
+                <IconButton
+                  icon={isEditHeader ? HiCheck : HiPencil}
+                  variant={isEditHeader ? 'primary' : 'dark'}
+                  onClick={toggleEditHeader}
+                ></IconButton>
+              </div>
+              <div className='flex items-center space-x-3'>
+                <p>Published</p>
+                <IconButton
+                  icon={isLive ? HiEye : HiEyeOff}
+                  variant={isLive ? 'primary' : 'dark'}
+                  onClick={toggleIsLive}
+                ></IconButton>
+              </div>
+            </div>
+            <div className='flex items-center space-x-5'>
+              <p
+                className='draft-exp text-lg leading-7 text-gray-500 dark:text-gray-400'
+                contentEditable={isEditExp}
+                onInput={expChange}
+              >
+                {editableExp}
+              </p>
+              <IconButton
+                icon={isEditExp ? HiCheck : HiPencil}
+                variant={isEditExp ? 'primary' : 'dark'}
+                onClick={toggleEditExp}
+              ></IconButton>
+            </div>
+            <ReactTags
+              tags={tags}
+              delimiters={delimiters}
+              handleDelete={handleDelete}
+              handleAddition={handleAddition}
+              handleDrag={handleDrag}
+              handleTagClick={handleTagClick}
+              autocomplete
+            />
+          </div>
+          <Editor content={content} setContent={setContent} />
+          <div className='flex justify-end'>
+            <Button leftIcon={HiSave} className='mt-14' onClick={savePage}>
+              Save
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div
+          className='layout relative flex flex-col items-center justify-center py-12 text-center'
+          style={{ minHeight: 'calc(100vh - 8rem' }}
+        >
+          <h1 className='mt-4 dark:text-white'>You have not logged in yet</h1>
+          <p className='mt-2 text-sm text-neutral-800 dark:text-neutral-300'>
+            You don't need to share your email and things with me to get
+            started. Just log in here:
+          </p>
+          <p className='text-primary-600 dark:text-primary-400 mt-5 text-sm'>
+            <Button onClick={() => signIn()}>Login</Button>
+          </p>
+        </div>
+      )}
+    </Wrapper>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const id = ctx.query.id as string;
+  const session = await getSession(ctx);
+  if (session) {
+    const draft = await prisma.post.findUnique({
+      where: { id: id },
+    });
+    return {
+      props: { draft: JSON.parse(JSON.stringify(draft)) },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
+};

@@ -1,74 +1,100 @@
 import * as React from 'react';
 
-import Layout from '@/components/layout/Layout';
 import ArrowLink from '@/components/links/ArrowLink';
-import ButtonLink from '@/components/links/ButtonLink';
-import UnderlineLink from '@/components/links/UnderlineLink';
-import UnstyledLink from '@/components/links/UnstyledLink';
-import Seo from '@/components/Seo';
+import Link from 'next/link';
+import Wrapper from '@/components/wrapper';
+import ArticleCard from '@/components/articleCard';
+import prisma from 'lib/prisma';
+import { useSession, getSession } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
+import { Post } from '@prisma/client';
 
-/**
- * SVGR Support
- * Caveat: No React Props Type.
- *
- * You can override the next-env if the type is important to you
- * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
- */
-import Vercel from '~/svg/Vercel.svg';
+type PostType = {
+  posts: Post[];
+};
 
-// !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
-// Before you begin editing, follow all comments with `STARTERCONF`,
-// to customize the default configuration.
-
-export default function HomePage() {
+export default function HomePage({ posts }: PostType) {
+  const { data: session } = useSession();
   return (
-    <Layout>
-      {/* <Seo templateTitle='Home' /> */}
-      <Seo />
-
-      <main>
-        <section className='bg-white'>
-          <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
-            <Vercel className='text-5xl' />
-            <h1 className='mt-4'>
-              Next.js + Tailwind CSS + TypeScript Starter
-            </h1>
-            <p className='mt-2 text-sm text-gray-800'>
-              A starter for Next.js, Tailwind CSS, and TypeScript with Absolute
-              Import, Seo, Link component, pre-configured with Husky{' '}
-            </p>
-            <p className='mt-2 text-sm text-gray-700'>
-              <ArrowLink href='https://github.com/theodorusclarence/ts-nextjs-tailwind-starter'>
-                See the repository
-              </ArrowLink>
-            </p>
-
-            <ButtonLink className='mt-6' href='/components' variant='light'>
-              See all components
-            </ButtonLink>
-
-            <UnstyledLink
-              href='https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Ftheodorusclarence%2Fts-nextjs-tailwind-starter'
-              className='mt-4'
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                width='92'
-                height='32'
-                src='https://vercel.com/button'
-                alt='Deploy with Vercel'
-              />
-            </UnstyledLink>
-
-            <footer className='absolute bottom-2 text-gray-700'>
-              © {new Date().getFullYear()} By{' '}
-              <UnderlineLink href='https://theodorusclarence.com?ref=tsnextstarter'>
-                Theodorus Clarence
-              </UnderlineLink>
-            </footer>
+    <Wrapper>
+      {!session ? (
+        <div
+          className='layout relative flex flex-col items-center justify-center py-12 text-center'
+          style={{ minHeight: 'calc(100vh - 8rem' }}
+        >
+          <h1 className='mt-4 dark:text-white'>Welcome to the ResearchBox!</h1>
+          <p className='mt-2 text-sm text-neutral-800 dark:text-neutral-300'>
+            This is a safe place to store your researches which I do personally.
+            You can create drafts and release your researches on here. If you
+            wish, you can also share your researches with the public.
+          </p>
+          <p className='text-primary-600 dark:text-primary-400 mt-2 text-sm'>
+            <ArrowLink href='https://github.com/yagiziskirik/research-box'>
+              Learn More in Github
+            </ArrowLink>
+          </p>
+        </div>
+      ) : (
+        <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
+          <div className='divide-y divide-neutral-200 dark:divide-neutral-700'>
+            <div className='space-y-2 pb-8 pt-6 md:space-y-5'>
+              <h1 className='md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-neutral-900 dark:text-neutral-100 sm:text-4xl sm:leading-10 md:text-6xl'>
+                Latest
+              </h1>
+              <p className='text-lg leading-7 text-neutral-500 dark:text-neutral-400'>
+                Latest researches you have finished and published
+              </p>
+            </div>
+            <ul className='divide-y divide-neutral-200 dark:divide-neutral-700'>
+              {posts.map(({ id, createdAt, tags, header, explanation }) => (
+                <li className='py-12' key={id}>
+                  <ArticleCard
+                    id={id}
+                    tags={tags}
+                    header={header}
+                    explanation={explanation}
+                    postOrDraft='posts'
+                    publishDate={createdAt}
+                    indexPage={true}
+                    published={false}
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
-        </section>
-      </main>
-    </Layout>
+          <div className='flex justify-end text-base font-medium leading-6'>
+            <Link
+              className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
+              href='/posts'
+            >
+              All Researches →
+            </Link>
+          </div>
+        </div>
+      )}
+    </Wrapper>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  if (session) {
+    const posts = await prisma.post.findMany({
+      take: 5,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      where: {
+        user: session.user,
+        published: true,
+      },
+    });
+    return {
+      props: { posts: JSON.parse(JSON.stringify(posts)) },
+    };
+  } else {
+    return {
+      props: { posts: [] },
+    };
+  }
+};

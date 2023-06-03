@@ -3,10 +3,9 @@ import { useRouter } from 'next/router';
 
 // !STARTERCONF Change these default meta
 const defaultMeta = {
-  title: 'Next.js + Tailwind CSS + TypeScript Starter',
-  siteName: 'Next.js + Tailwind CSS + TypeScript Starter',
-  description:
-    'A starter for Next.js, Tailwind CSS, and TypeScript with Absolute Import, Seo, Link component, pre-configured with Husky',
+  title: 'ResearchBox',
+  siteName: 'ResearchBox',
+  description: 'Research notebook application for taking notes on researches.',
   /** Without additional '/' on the end, e.g. https://theodorusclarence.com */
   url: 'https://tsnext-tw.thcl.dev',
   type: 'website',
@@ -75,7 +74,7 @@ export default function Seo(props: SeoProps) {
           <meta
             name='author'
             property='article:author'
-            content='Theodorus Clarence'
+            content='Yagiz Iskirik'
           />
         </>
       )}
@@ -86,7 +85,16 @@ export default function Seo(props: SeoProps) {
       ))}
       <meta name='msapplication-TileColor' content='#ffffff' />
       <meta name='msapplication-config' content='/favicon/browserconfig.xml' />
-      <meta name='theme-color' content='#ffffff' />
+      <meta
+        name='theme-color'
+        content='#ffffff'
+        media='(prefers-color-scheme: light)'
+      />
+      <meta
+        name='theme-color'
+        content='#171717'
+        media='(prefers-color-scheme: dark)'
+      />
     </Head>
   );
 }
@@ -115,7 +123,7 @@ const favicons: Array<React.ComponentPropsWithoutRef<'link'>> = [
   {
     rel: 'mask-icon',
     href: '/favicon/safari-pinned-tab.svg',
-    color: '#00e887',
+    color: '#BF3F3D',
   },
   { rel: 'shortcut icon', href: '/favicon/favicon.ico' },
 ];
