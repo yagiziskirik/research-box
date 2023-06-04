@@ -156,6 +156,18 @@
   @apply dark:!bg-neutral-800;
 }
 
+.wmde-markdown li {
+  list-style-type: decimal;
+}
+
+.wmde-markdown li {
+  list-style-type: disc;
+}
+
+.wmde-markdown a {
+  @apply text-primary-500;
+}
+
 #nprogress .bar {
   background: rgb(45, 212, 191);
 }
