@@ -168,6 +168,10 @@
   @apply !text-primary-500;
 }
 
+.wmde-markdown code:not(.code-highlight) {
+  @apply !text-pink-500;
+}
+
 #nprogress .bar {
   background: rgb(45, 212, 191);
 }

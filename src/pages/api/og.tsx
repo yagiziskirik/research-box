@@ -7,6 +7,10 @@ import { ImageResponse } from '@vercel/og';
 import Image from 'next/image';
 import { NextRequest } from 'next/server';
 
+export const config = {
+  runtime: 'edge',
+};
+
 const OgImageHandler = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const writer = searchParams.get('writer') || 'ResearchBox';
