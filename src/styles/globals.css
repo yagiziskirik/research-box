@@ -156,11 +156,11 @@
   @apply dark:!bg-neutral-800;
 }
 
-.wmde-markdown li {
+.wmde-markdown ol {
   list-style-type: decimal;
 }
 
-.wmde-markdown li {
+.wmde-markdown ul {
   list-style-type: disc;
 }
 
