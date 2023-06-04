@@ -4,7 +4,6 @@
 // https://opensource.org/licenses/MIT
 
 import { ImageResponse } from '@vercel/og';
-import Image from 'next/image';
 import { NextRequest } from 'next/server';
 
 export const config = {
@@ -37,7 +36,7 @@ const OgImageHandler = async (req: NextRequest) => {
         }}
       >
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <Image
+          <img
             src={imgSrc}
             alt='logo'
             style={{
