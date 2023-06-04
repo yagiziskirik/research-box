@@ -4,14 +4,14 @@
 // https://opensource.org/licenses/MIT
 
 import { Post } from '@prisma/client';
-import Link from 'next/link';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
 import { getSession, signIn, useSession } from 'next-auth/react';
 
 import Button from '@/components/buttons/Button';
 import Wrapper from '@/components/wrapper';
-import Head from 'next/head';
 
 interface TagsType {
   name: string;

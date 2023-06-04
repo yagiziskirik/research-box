@@ -6,6 +6,7 @@
 import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { getSession, signIn, useSession } from 'next-auth/react';
 import { ChangeEvent, useState } from 'react';
 import { HiPlus } from 'react-icons/hi';
@@ -17,7 +18,6 @@ import Button from '@/components/buttons/Button';
 import ButtonLink from '@/components/links/ButtonLink';
 import Modal from '@/components/Modal';
 import Wrapper from '@/components/wrapper';
-import Head from 'next/head';
 
 type DraftType = {
   drafts: Post[];

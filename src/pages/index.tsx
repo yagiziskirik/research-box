@@ -1,6 +1,7 @@
 import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { getSession, useSession } from 'next-auth/react';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import * as React from 'react';
 import ArticleCard from '@/components/articleCard';
 import ArrowLink from '@/components/links/ArrowLink';
 import Wrapper from '@/components/wrapper';
-import Head from 'next/head';
 
 type PostType = {
   posts: Post[];
@@ -36,9 +36,9 @@ export default function HomePage({ posts }: PostType) {
         >
           <h1 className='mt-4 dark:text-white'>Welcome to the ResearchBox!</h1>
           <p className='mt-2 text-sm text-neutral-800 dark:text-neutral-300'>
-            This is a safe place to store your researches which I do personally.
-            You can create drafts and release your researches on here. If you
-            wish, you can also share your researches with the public.
+            This is a place to store your researches which I do personally. You
+            can create drafts and release your researches on here. If you wish,
+            you can also share your researches with the public.
           </p>
           <p className='text-primary-600 dark:text-primary-400 mt-2 text-sm'>
             <ArrowLink href='https://github.com/yagiziskirik/research-box'>
