@@ -165,7 +165,7 @@
 }
 
 .wmde-markdown a {
-  @apply text-primary-500;
+  @apply !text-primary-500;
 }
 
 #nprogress .bar {
