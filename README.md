@@ -23,7 +23,7 @@ This project is not a replacement for big companies like Medium. It is not a blo
 
 Since the project is based on Next.js arcitecture, even though it has dynamic data fetching from database, it is still blazingly fast. I developed it as semi progressive web app, which means you can use it on your phone like an actual program if you have internet connection.
 
-> For the curious ones, the website itself has almost a perfect score on every category in Lighthouse tests. ![Lighthouse performance](https://i.ibb.co/6JmqcPc/performance.png)
+> For the curious ones, the website itself has almost a perfect score on every category in Lighthouse tests. ![Lighthouse performance](https://i.ibb.co/YfpwsGv/performance.jpg)
 
 ## Creating an account
 
@@ -67,7 +67,7 @@ The (1) is the delete button to remove any researches you want. And the (2) is t
 
 It is very straight forward. You can see the tags you created, and checkout the articles have that tag.
 
-![tags page](https://i.ibb.co/0ZSLXR0/6.jpg)
+![tags page](https://i.ibb.co/sgjG4Zx/6.jpg)
 
 ### Researches Page
 
@@ -85,7 +85,7 @@ Once you logged in, you can see your last 5 published researches here.
 
 Everything under the URL of `https://research-box.vercel.app/posts/POST_ID` directory counts as an article. If you share that URL and your research is published, everyone who follows this URL can see the research without a need to login.
 
-![Article](https://i.ibb.co/gMC3V6x/9.jpg)
+![Article](https://i.ibb.co/HgbSTkY/9.jpg)
 
 ## Accessibility
 
