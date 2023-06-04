@@ -7,6 +7,7 @@ import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
 import { ChangeEvent, useState } from 'react';
 import { HiPlus } from 'react-icons/hi';
@@ -31,6 +32,7 @@ const randomId = () => {
 const POST_PER_PAGE = 5;
 
 export default function Posts({ drafts }: DraftType) {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(drafts.length / POST_PER_PAGE);
@@ -51,6 +53,10 @@ export default function Posts({ drafts }: DraftType) {
   const { data: session } = useSession();
   const [isModal, modalToggle] = useState(false);
   const [deleteNo, setDelete] = useState('');
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   const alert = (
     msg: string,
@@ -76,6 +82,7 @@ export default function Posts({ drafts }: DraftType) {
         });
         if (res.status === 200) {
           alert('Success!', 'success');
+          refreshData();
         } else {
           alert('An error occured', 'error');
         }

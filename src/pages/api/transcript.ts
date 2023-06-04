@@ -24,7 +24,7 @@ export default async function handler(
     const { url } = req.body;
     const resp = await YoutubeTranscript.fetchTranscript(url);
     res.json(
-      'Can you summarise this transcribed video without the advertisements and as bullet points:\n\n' +
+      'Can you summarise this transcribed video without the advertisements and sponsors and as bullet points:\n\n' +
         gt(resp)
     );
   } catch (err) {
