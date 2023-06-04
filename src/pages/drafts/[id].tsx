@@ -4,13 +4,13 @@
 // https://opensource.org/licenses/MIT
 
 import { Post } from '@prisma/client';
-import prisma from 'lib/prisma';
 import clipboard from 'clipboardy';
+import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
 import { ChangeEvent, useState } from 'react';
-import Head from 'next/head';
 import {
   HiChat,
   HiCheck,

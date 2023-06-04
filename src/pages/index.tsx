@@ -1,6 +1,7 @@
 import { Post } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { getSession, useSession } from 'next-auth/react';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import * as React from 'react';
 import ArticleCard from '@/components/articleCard';
 import ArrowLink from '@/components/links/ArrowLink';
 import Wrapper from '@/components/wrapper';
-import Head from 'next/head';
 
 type PostType = {
   posts: Post[];

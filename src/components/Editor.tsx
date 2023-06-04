@@ -5,8 +5,10 @@
 
 import dynamic from 'next/dynamic';
 
-import 'react-quill/dist/quill.snow.css';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import '@uiw/react-markdown-preview/markdown.css';
+import '@uiw/react-md-editor/markdown-editor.css';
+
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
 interface Props {
   content: string;
@@ -14,29 +16,12 @@ interface Props {
 }
 
 export default function Editor({ content, setContent }: Props) {
-  const toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-    ['blockquote', 'code-block'],
-    ['link', 'image'],
-
-    [{ header: 1 }, { header: 2 }], // custom button values
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-    [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
-
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-    [{ font: [] }],
-    [{ align: [] }],
-
-    ['clean'], // remove formatting button
-  ];
   return (
-    <ReactQuill
-      theme='snow'
-      modules={{ toolbar: toolbarOptions }}
-      value={content as string}
-      onChange={setContent}
+    <MDEditor
+      value={content}
+      onChange={(val) => setContent(val || '')}
+      height={500}
+      preview='edit'
       className='h-screen-2'
     />
   );

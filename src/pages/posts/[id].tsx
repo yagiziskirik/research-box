@@ -4,15 +4,27 @@
 // https://opensource.org/licenses/MIT
 
 import { Post, User } from '@prisma/client';
+import { MarkdownPreviewProps } from '@uiw/react-markdown-preview';
 import prisma from 'lib/prisma';
 import moment from 'moment';
 import { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiMail } from 'react-icons/hi';
 
-import Wrapper from '@/components/wrapper';
+import '@uiw/react-markdown-preview/markdown.css';
+
+const MarkdownPreview = dynamic<MarkdownPreviewProps>(
+  () => import('@uiw/react-markdown-preview'),
+  {
+    ssr: false,
+  }
+);
+
 import Head from 'next/head';
+
+import Wrapper from '@/components/wrapper';
 
 type PostType = Post & { user: User };
 
@@ -121,10 +133,10 @@ export default function Posts({ post }: DraftType) {
                       </ul>
                     </dd>
                   </dl>
-                  <div
-                    className='prose dark:prose-dark main-article col-span-3 row-span-2 max-w-none space-y-2 pb-8 pt-10'
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                  ></div>
+                  <MarkdownPreview
+                    className='main-article col-span-3 row-span-2 max-w-none space-y-2 pb-8 pt-10'
+                    source={post.content}
+                  />
                   <footer>
                     <div className='divide-neutral-200 text-sm font-medium leading-5 dark:divide-neutral-700 xl:col-start-1 xl:row-start-2 xl:divide-y'>
                       <div className='pt-6'>
