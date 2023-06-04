@@ -4,10 +4,11 @@
 
 Under these versions, you can report vulnerabilities:
 
-    | Version           | Supported          |
+| Version           | Supported          |
 | ----------------- | ------------------ |
-| v1.2.1    | :white_check_mark: |
-| < v1.2.1  | :x:                |
+| v1.2.1            | :white_check_mark: |
+| < v1.2.1          | :x:                |
+| ----------------- | ------------------ |
 
 ## Reporting a Vulnerability
 
