@@ -104,6 +104,7 @@ export default function Draft({ draft }: DraftType) {
   const [isLive, setIsLive] = useState(draft ? draft.published : false);
 
   const toggleIsLive = () => {
+    setSaveButton(true);
     setIsLive(!isLive);
   };
 
