@@ -10,7 +10,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
-import { ChangeEvent, useState, useEffect } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   HiChat,
   HiCheck,
@@ -169,7 +169,8 @@ export default function Draft({ draft }: DraftType) {
     return () => {
       clearTimeout(autosaveInterval);
     };
-  }, [content, saveButton]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content, autoSaveText]);
 
   const setContentFunc = (ctx: string) => {
     setContent(ctx);

@@ -11,8 +11,8 @@ import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiMail } from 'react-icons/hi';
 import { useSession } from 'next-auth/react';
+import { HiMail } from 'react-icons/hi';
 
 import '@uiw/react-markdown-preview/markdown.css';
 
