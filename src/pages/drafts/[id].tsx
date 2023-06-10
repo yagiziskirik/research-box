@@ -104,6 +104,7 @@ export default function Draft({ draft }: DraftType) {
   const [isLive, setIsLive] = useState(draft ? draft.published : false);
 
   const toggleIsLive = () => {
+    setSaveButton(true);
     setIsLive(!isLive);
   };
 
@@ -290,8 +291,8 @@ export default function Draft({ draft }: DraftType) {
                 buttonLoading
                   ? undefined
                   : buttonCopy
-                  ? HiClipboardCopy
-                  : HiChat
+                    ? HiClipboardCopy
+                    : HiChat
               }
               onClick={buttonCopy ? copyPrompt : getTranscription}
               variant='dark'
