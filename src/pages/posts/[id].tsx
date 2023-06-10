@@ -11,6 +11,7 @@ import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { HiMail } from 'react-icons/hi';
 
 import '@uiw/react-markdown-preview/markdown.css';
@@ -47,6 +48,7 @@ const getPreppedQuery = (post: PostType) => {
 };
 
 export default function Posts({ post }: DraftType) {
+  const { data: session } = useSession();
   return (
     <Wrapper>
       {post !== null ? (
@@ -144,25 +146,36 @@ export default function Posts({ post }: DraftType) {
                           Tags
                         </h2>
                         <div className='flex flex-wrap'>
-                          {post.tags.map((tag) => (
-                            <Link
-                              className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase'
-                              href={'/tags/' + tag}
-                              key={tag}
-                            >
-                              {tag}
-                            </Link>
-                          ))}
+                          {post.tags.map((tag) =>
+                            session ? (
+                              <Link
+                                className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase'
+                                href={'/tags/' + tag}
+                                key={tag}
+                              >
+                                {tag}
+                              </Link>
+                            ) : (
+                              <p
+                                className='text-primary-500 my-0 mr-3 text-sm font-medium uppercase'
+                                key={tag}
+                              >
+                                {tag}
+                              </p>
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
                     <div className='pt-6'>
-                      <Link
-                        className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
-                        href='/posts'
-                      >
-                        ← Back to the researches
-                      </Link>
+                      {session && (
+                        <Link
+                          className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
+                          href='/posts'
+                        >
+                          ← Back to the researches
+                        </Link>
+                      )}
                     </div>
                   </footer>
                 </div>

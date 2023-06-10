@@ -1,6 +1,6 @@
 # ResearchBox
 
-![Version v1.2.1](https://img.shields.io/badge/version-v1.2.1-blue) ![License](https://img.shields.io/badge/Licence-MIT-green) ![Maintenance](https://img.shields.io/maintenance/yes/2023)
+![Version v1.2.2](https://img.shields.io/badge/version-v1.2.1-blue) ![License](https://img.shields.io/badge/Licence-MIT-green) ![Maintenance](https://img.shields.io/maintenance/yes/2023)
 
 Unlock the power of knowledge organization with ResearchBox, your comprehensive research repository.
 
@@ -9,6 +9,7 @@ Unlock the power of knowledge organization with ResearchBox, your comprehensive 
 ## Features
 
 - 📓 Easy-to-use markdown note taking
+- 💾 Autosave feature
 - 👔 Professional blog-like appearence
 - 💡 Simple, yet effective
 - 💬 ChatGPT prompt generator from YouTube video transcriptions
@@ -54,8 +55,7 @@ Let's explain every element.
    ![markdown](https://i.ibb.co/VD00Hvm/4-5.gif)
 6. ChatGPT Prompt Generator.
    > It uses your clipboard to _transcribe_ a video and give you copy-ready ChatGPT prompt to get the summary of any YouTube video. Please make sure the last item in your clipboard is the YouTube video link.
-7. Save button, which saves the changes.
-   > Warning: There are no autosave features implemented yet, so please make sure to **save the page manually**.
+7. Save button, which saves the changes or wait for 5 seconds after the last change to autosave feature to kick in.
 
 Once you finish adding a research, your research will be added to the `All Work` page. As you can see, new buttons will come up:
 

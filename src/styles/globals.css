@@ -96,16 +96,20 @@
     @apply min-h-[calc(100vh-56px)];
   }
 
-  h1.draft-header[contenteditable='true'] {
+  textarea.draft-header {
+    @apply w-full text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl;
     border: 1px solid var(--color-primary-400);
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
+    background: none;
   }
 
-  p.draft-exp[contenteditable='true'] {
+  textarea.draft-exp {
+    @apply w-full text-lg leading-7 text-gray-500 dark:text-gray-400;
     border: 1px solid var(--color-primary-400);
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
+    background: none;
   }
 }
 
