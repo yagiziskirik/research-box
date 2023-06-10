@@ -291,8 +291,8 @@ export default function Draft({ draft }: DraftType) {
                 buttonLoading
                   ? undefined
                   : buttonCopy
-                    ? HiClipboardCopy
-                    : HiChat
+                  ? HiClipboardCopy
+                  : HiChat
               }
               onClick={buttonCopy ? copyPrompt : getTranscription}
               variant='dark'
