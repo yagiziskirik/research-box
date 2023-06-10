@@ -49,13 +49,13 @@ export default function ArticleCard({
         <div className='space-y-3'>
           <div>
             <h3 className='flex items-center text-2xl font-bold leading-8 tracking-tight'>
+              {published && <HiOutlineEye className='text-primary-400 mr-2' />}
               <Link
                 className='text-neutral-900 dark:text-neutral-100'
                 href={'/' + postOrDraft + '/' + id}
               >
                 {header}
               </Link>
-              {published && <HiOutlineEye className='text-primary-400 ml-3' />}
             </h3>
             <div className='flex flex-wrap'>
               {tags.map((tag) => (
@@ -84,7 +84,12 @@ export default function ArticleCard({
           )}
         </div>
         {isDelete && (
-          <IconButton icon={HiTrash} variant='danger' onClick={deleteFunc} />
+          <IconButton
+            icon={HiTrash}
+            variant='danger'
+            onClick={deleteFunc}
+            className='ml-2'
+          />
         )}
       </div>
     </article>

@@ -10,7 +10,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 import {
   HiChat,
   HiCheck,
@@ -44,11 +44,9 @@ interface TagType {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-export default function Draft(draft: DraftType) {
+export default function Draft({ draft }: DraftType) {
   const [tags, setTags] = useState(
-    draft.draft
-      ? draft.draft.tags.map((tagNew) => ({ id: tagNew, text: tagNew }))
-      : []
+    draft ? draft.tags.map((tagNew) => ({ id: tagNew, text: tagNew })) : []
   );
 
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -78,57 +76,59 @@ export default function Draft(draft: DraftType) {
 
   const { data: session } = useSession();
   const router = useRouter();
-  const [editableHeader, editHeader] = useState(
-    draft.draft ? draft.draft.header : 'New Draft'
-  );
-  let cachedHeader = editableHeader;
+  const [editableHeader, editHeader] = useState(draft ? draft.header : '');
   const [isEditHeader, isEditHeaderChange] = useState(false);
-  function headerChange(el: ChangeEvent<HTMLHeadingElement>) {
-    cachedHeader = el.target.textContent || '';
+  function headerChange(el: ChangeEvent<HTMLTextAreaElement>) {
+    setSaveButton(true);
+    editHeader(el.target.value || '');
   }
   const toggleEditHeader = () => {
-    if (isEditHeader) editHeader(cachedHeader);
     isEditHeaderChange(!isEditHeader);
   };
 
   const [editableExp, editExp] = useState(
-    draft.draft ? draft.draft.explanation : 'Explanation of the research'
+    draft ? draft.explanation : 'Explanation of the research'
   );
-  let cachedExp = editableExp;
   const [isEditExp, isEditExpChange] = useState(false);
-  function expChange(el: ChangeEvent<HTMLParagraphElement>) {
-    cachedExp = el.target.textContent || '';
+  function expChange(el: ChangeEvent<HTMLTextAreaElement>) {
+    setSaveButton(true);
+    editExp(el.target.value || '');
   }
   const toggleEditExp = () => {
-    if (isEditExp) editExp(cachedExp);
     isEditExpChange(!isEditExp);
   };
 
-  const [content, setContent] = useState(
-    draft.draft ? draft.draft.content : ''
-  );
-  const [isLive, setIsLive] = useState(
-    draft.draft ? draft.draft.published : false
-  );
+  const [content, setContent] = useState(draft ? draft.content : '');
+  const [autoSaveText, setAutoSaveText] = useState(draft ? draft.content : '');
+  const [saveButton, setSaveButton] = useState(false);
+  const [isLive, setIsLive] = useState(draft ? draft.published : false);
+
   const toggleIsLive = () => {
     setIsLive(!isLive);
   };
 
   const alert = (
     msg: string,
-    type: 'warning' | 'success' | 'info' | 'error' | 'default'
+    type: 'warning' | 'success' | 'info' | 'error' | 'default',
+    position:
+      | 'bottom-center'
+      | 'bottom-right'
+      | 'bottom-left'
+      | 'top-center'
+      | 'top-right'
+      | 'top-left'
   ) => {
     toast(msg, {
       autoClose: 2000,
       type: type,
       theme: 'colored',
-      position: 'bottom-center',
+      position: position,
     });
   };
 
   const getTranscription = async () => {
     if (buttonLoading) {
-      alert('Another process is ongoing', 'warning');
+      alert('Another process is ongoing', 'warning', 'bottom-center');
     }
     setButtonLoading(true);
     try {
@@ -143,24 +143,41 @@ export default function Draft(draft: DraftType) {
         setCopyText(jsonData);
         setButtonLoading(false);
         setButtonCopy(true);
-        alert('Prompt is ready to copy', 'info');
+        alert('Prompt is ready to copy', 'info', 'bottom-center');
       } else {
         setButtonLoading(false);
-        alert("Couldn't parse YouTube url", 'error');
+        alert("Couldn't parse YouTube url", 'error', 'bottom-center');
       }
     } catch (err) {
       setButtonLoading(false);
-      alert('You need to allow pasting.', 'error');
+      alert('You need to allow pasting.', 'error', 'bottom-center');
     }
   };
 
   const copyPrompt = async () => {
     await clipboard.write(copyText);
     setButtonCopy(false);
-    alert('Paste prompt to ChatGPT', 'info');
+    alert('Paste prompt to ChatGPT', 'info', 'bottom-center');
   };
 
-  const savePage = async () => {
+  useEffect(() => {
+    const autosaveInterval = setTimeout(() => {
+      if (autoSaveText != content) {
+        savePage(false);
+      }
+    }, 5000);
+    return () => {
+      clearTimeout(autosaveInterval);
+    };
+  }, [content, saveButton]);
+
+  const setContentFunc = (ctx: string) => {
+    setContent(ctx);
+    setSaveButton(true);
+  };
+
+  const savePage = async (normalSave = true) => {
+    setAutoSaveText(content);
     const body = {
       id: router.query.id,
       header: editableHeader,
@@ -177,12 +194,17 @@ export default function Draft(draft: DraftType) {
         body: JSON.stringify(body),
       });
       if (res.status === 200) {
-        alert('Success!', 'success');
+        setSaveButton(false);
+        if (normalSave) {
+          alert('Successfully saved.', 'success', 'bottom-center');
+        } else {
+          alert('Auto saved.', 'info', 'top-center');
+        }
       } else {
-        alert('An error occured', 'error');
+        alert('An error occured', 'error', 'bottom-center');
       }
     } catch (err) {
-      alert(`${err}`, 'error');
+      alert(`${err}`, 'error', 'bottom-center');
     }
   };
 
@@ -204,13 +226,18 @@ export default function Draft(draft: DraftType) {
           <div className='space-y-2 pb-8 pt-6 md:space-y-5'>
             <div className='flex items-center justify-between'>
               <div className='flex items-center space-x-5'>
-                <h1
-                  className='md:leading-14 draft-header text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl'
-                  contentEditable={isEditHeader}
-                  onInput={headerChange}
-                >
-                  {editableHeader}
-                </h1>
+                {isEditHeader ? (
+                  <textarea
+                    className='draft-header'
+                    onChange={headerChange}
+                    placeholder='New Draft'
+                    value={editableHeader}
+                  ></textarea>
+                ) : (
+                  <h1 className='md:leading-14 draft-header text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl'>
+                    {editableHeader}
+                  </h1>
+                )}
                 <IconButton
                   icon={isEditHeader ? HiCheck : HiPencil}
                   variant={isEditHeader ? 'primary' : 'dark'}
@@ -227,13 +254,19 @@ export default function Draft(draft: DraftType) {
               </div>
             </div>
             <div className='flex items-center space-x-5'>
-              <p
-                className='draft-exp text-lg leading-7 text-gray-500 dark:text-gray-400'
-                contentEditable={isEditExp}
-                onInput={expChange}
-              >
-                {editableExp}
-              </p>
+              {isEditExp ? (
+                <textarea
+                  className='draft-exp'
+                  onInput={expChange}
+                  value={editableExp}
+                >
+                  {editableExp}
+                </textarea>
+              ) : (
+                <p className='draft-exp text-lg leading-7 text-gray-500 dark:text-gray-400'>
+                  {editableExp}
+                </p>
+              )}
               <IconButton
                 icon={isEditExp ? HiCheck : HiPencil}
                 variant={isEditExp ? 'primary' : 'dark'}
@@ -249,7 +282,7 @@ export default function Draft(draft: DraftType) {
               autocomplete
             />
           </div>
-          <Editor content={content} setContent={setContent} />
+          <Editor content={content} setContent={setContentFunc} />
           <div className='mt-24 flex justify-end gap-2 md:mt-14'>
             <Button
               leftIcon={
@@ -275,7 +308,12 @@ export default function Draft(draft: DraftType) {
                 'ChatGPT Prompt'
               )}
             </Button>
-            <Button leftIcon={HiSave} onClick={savePage}>
+            <Button
+              leftIcon={HiSave}
+              onClick={() => savePage()}
+              disabled={!saveButton}
+              variant={saveButton ? 'primary' : 'dark'}
+            >
               Save
             </Button>
           </div>
