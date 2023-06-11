@@ -10,7 +10,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   HiChat,
   HiCheck,
@@ -22,8 +22,8 @@ import {
 } from 'react-icons/hi';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
-import Interval from '@/components/Autosave';
 
+import Interval from '@/components/Autosave';
 import Button from '@/components/buttons/Button';
 import IconButton from '@/components/buttons/IconButton';
 import Editor from '@/components/Editor';
@@ -288,8 +288,8 @@ export default function Draft({ draft }: DraftType) {
                 buttonLoading
                   ? undefined
                   : buttonCopy
-                    ? HiClipboardCopy
-                    : HiChat
+                  ? HiClipboardCopy
+                  : HiChat
               }
               onClick={buttonCopy ? copyPrompt : getTranscription}
               variant='dark'
