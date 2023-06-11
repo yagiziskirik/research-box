@@ -22,6 +22,7 @@ import {
 } from 'react-icons/hi';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
+import Interval from '@/components/Autosave';
 
 import Button from '@/components/buttons/Button';
 import IconButton from '@/components/buttons/IconButton';
@@ -74,9 +75,17 @@ export default function Draft({ draft }: DraftType) {
     setTags(newTags);
   };
 
+  Interval(() => {
+    if (autoSaveText != content) {
+      savePage(false);
+    }
+  }, 1000 * 60 * 2);
+
   const { data: session } = useSession();
   const router = useRouter();
-  const [editableHeader, editHeader] = useState(draft ? draft.header : '');
+  const [editableHeader, editHeader] = useState(
+    draft ? draft.header : 'New Header'
+  );
   const [isEditHeader, isEditHeaderChange] = useState(false);
   function headerChange(el: ChangeEvent<HTMLTextAreaElement>) {
     setSaveButton(true);
@@ -160,18 +169,6 @@ export default function Draft({ draft }: DraftType) {
     setButtonCopy(false);
     alert('Paste prompt to ChatGPT', 'info', 'bottom-center');
   };
-
-  useEffect(() => {
-    const autosaveInterval = setTimeout(() => {
-      if (autoSaveText != content) {
-        savePage(false);
-      }
-    }, 5000);
-    return () => {
-      clearTimeout(autosaveInterval);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content, autoSaveText]);
 
   const setContentFunc = (ctx: string) => {
     setContent(ctx);
@@ -291,8 +288,8 @@ export default function Draft({ draft }: DraftType) {
                 buttonLoading
                   ? undefined
                   : buttonCopy
-                  ? HiClipboardCopy
-                  : HiChat
+                    ? HiClipboardCopy
+                    : HiChat
               }
               onClick={buttonCopy ? copyPrompt : getTranscription}
               variant='dark'
