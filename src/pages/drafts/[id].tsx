@@ -10,7 +10,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { getSession, signIn, useSession } from 'next-auth/react';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   HiChat,
   HiCheck,
@@ -23,6 +23,7 @@ import {
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
 
+import Interval from '@/components/Autosave';
 import Button from '@/components/buttons/Button';
 import IconButton from '@/components/buttons/IconButton';
 import Editor from '@/components/Editor';
@@ -74,9 +75,17 @@ export default function Draft({ draft }: DraftType) {
     setTags(newTags);
   };
 
+  Interval(() => {
+    if (autoSaveText != content) {
+      savePage(false);
+    }
+  }, 1000 * 60 * 2);
+
   const { data: session } = useSession();
   const router = useRouter();
-  const [editableHeader, editHeader] = useState(draft ? draft.header : '');
+  const [editableHeader, editHeader] = useState(
+    draft ? draft.header : 'New Header'
+  );
   const [isEditHeader, isEditHeaderChange] = useState(false);
   function headerChange(el: ChangeEvent<HTMLTextAreaElement>) {
     setSaveButton(true);
@@ -160,18 +169,6 @@ export default function Draft({ draft }: DraftType) {
     setButtonCopy(false);
     alert('Paste prompt to ChatGPT', 'info', 'bottom-center');
   };
-
-  useEffect(() => {
-    const autosaveInterval = setTimeout(() => {
-      if (autoSaveText != content) {
-        savePage(false);
-      }
-    }, 5000);
-    return () => {
-      clearTimeout(autosaveInterval);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content, autoSaveText]);
 
   const setContentFunc = (ctx: string) => {
     setContent(ctx);
