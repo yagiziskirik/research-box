@@ -113,6 +113,14 @@
   }
 }
 
+.scroll-bar {
+  @apply bg-primary-500 dark:bg-primary-400 fixed left-0 right-0 z-20 h-1;
+  transition: all 0.2s ease-out;
+  box-shadow: 0px 0px 5px 0.25px #0ff;
+  top: 56px;
+  transform-origin: 0%;
+}
+
 .ql-toolbar {
   @apply bg-neutral-100 dark:bg-neutral-200;
   border-radius: 0.5rem 0.5rem 0 0;

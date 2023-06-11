@@ -5,6 +5,7 @@
 
 import { Post, User } from '@prisma/client';
 import { MarkdownPreviewProps } from '@uiw/react-markdown-preview';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import prisma from 'lib/prisma';
 import moment from 'moment';
 import { GetServerSideProps } from 'next';
@@ -49,6 +50,13 @@ const getPreppedQuery = (post: PostType) => {
 
 export default function Posts({ post }: DraftType) {
   const { data: session } = useSession();
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 15,
+    restDelta: 0.001,
+  });
+
   return (
     <Wrapper>
       {post !== null ? (
@@ -70,6 +78,7 @@ export default function Posts({ post }: DraftType) {
               }
             />
           </Head>
+          <motion.div className='scroll-bar' style={{ scaleX }} />
           <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
             <article>
               <div className='xl:divide-y xl:divide-neutral-200 xl:dark:divide-neutral-700'>
