@@ -22,7 +22,7 @@ export default function Wrapper({ children }: Props) {
         <Header />
         <section>{children}</section>
       </main>
-      <footer className='mt-5 flex w-full flex-col items-center py-5 text-xs font-light text-neutral-800/50 dark:text-neutral-100/30'>
+      <footer className='mt-5 flex w-full flex-col items-center py-5 text-xs font-light text-neutral-800 dark:text-neutral-100'>
         <div>
           © {new Date().getFullYear()} By{' '}
           <UnderlineLink href='https://github.com/yagiziskirik'>

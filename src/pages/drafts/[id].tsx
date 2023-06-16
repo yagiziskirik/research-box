@@ -219,6 +219,10 @@ export default function Draft({ draft }: DraftType) {
           name='twitter:image'
           content='https://research-box.vercel.app/api/og'
         />
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1.0, maximum-scale=1.0'
+        />
       </Head>
       {session ? (
         <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>

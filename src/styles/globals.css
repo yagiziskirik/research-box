@@ -118,6 +118,7 @@
   transition: all 0.2s ease-out;
   box-shadow: 0px 0px 5px 0.25px #0ff;
   top: 56px;
+  transform: scaleX(0);
   transform-origin: 0%;
 }
 
