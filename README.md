@@ -24,7 +24,7 @@ This project is not a replacement for big companies like Medium. It is not a blo
 
 Since the project is based on Next.js arcitecture, even though it has dynamic data fetching from database, it is still blazingly fast. I developed it as semi progressive web app, which means you can use it on your phone like an actual program if you have internet connection.
 
-> For the curious ones, the website itself has almost a perfect score on every category in Lighthouse tests. ![Lighthouse performance](https://i.ibb.co/YfpwsGv/performance.jpg)
+> For the curious ones, the website itself has a perfect score on every category in Lighthouse tests. ![Lighthouse performance](https://i.ibb.co/sP7g7pp/Screenshot-2023-06-16-at-21-50-03.jpg)
 
 ## Creating an account
 
