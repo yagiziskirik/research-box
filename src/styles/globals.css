@@ -177,6 +177,15 @@
   list-style-type: disc;
 }
 
+.wmde-markdown h1,
+.wmde-markdown h2,
+.wmde-markdown h3,
+.wmde-markdown h4,
+.wmde-markdown h5,
+.wmde-markdown h6 {
+  margin-top: 1.5rem !important;
+}
+
 .wmde-markdown a {
   @apply !text-primary-500;
 }
