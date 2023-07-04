@@ -19,6 +19,7 @@ interface Props {
   published: boolean;
   postOrDraft: 'posts' | 'drafts';
   isDelete?: boolean;
+  isLinked?: boolean;
   deleteFunc?: () => void;
   indexPage?: boolean;
 }
@@ -32,6 +33,7 @@ export default function ArticleCard({
   published,
   postOrDraft,
   isDelete = false,
+  isLinked = true,
   deleteFunc,
   indexPage,
 }: Props) {
@@ -58,15 +60,24 @@ export default function ArticleCard({
               </Link>
             </h3>
             <div className='flex flex-wrap'>
-              {tags.map((tag) => (
-                <Link
-                  key={tag}
-                  className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase'
-                  href={'/tags/' + tag}
-                >
-                  {tag}
-                </Link>
-              ))}
+              {tags.map((tag) => {
+                return isLinked ? (
+                  <Link
+                    key={tag}
+                    className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase'
+                    href={'/tags/' + tag}
+                  >
+                    {tag}
+                  </Link>
+                ) : (
+                  <p
+                    key={tag}
+                    className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase'
+                  >
+                    {tag}
+                  </p>
+                );
+              })}
             </div>
           </div>
           <div className='prose max-w-none text-neutral-500 dark:text-neutral-400'>
