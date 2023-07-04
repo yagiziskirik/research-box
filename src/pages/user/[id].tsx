@@ -3,36 +3,37 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import { Post } from '@prisma/client';
+import { Post, User } from '@prisma/client';
 import prisma from 'lib/prisma';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { getSession, signIn, useSession } from 'next-auth/react';
 import { ChangeEvent, useState } from 'react';
-import { HiExternalLink } from 'react-icons/hi';
 
 import ArticleCard from '@/components/articleCard';
-import Button from '@/components/buttons/Button';
-import ButtonLink from '@/components/links/ButtonLink';
 import Wrapper from '@/components/wrapper';
 
 type DraftType = {
   posts: Post[];
+  selUser: User;
 };
 
 const POST_PER_PAGE = 5;
 
-export default function Posts({ posts }: DraftType) {
+export default function Posts({ posts, selUser }: DraftType) {
   const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(posts.length / POST_PER_PAGE);
+  const totalPages = posts ? Math.ceil(posts.length / POST_PER_PAGE) : 0;
   const prevPage = currentPage - 1 > 0;
   const nextPage = currentPage + 1 <= totalPages;
-  const filteredPosts = posts.filter((filterPost) => {
-    const searchContent =
-      filterPost.header + filterPost.explanation + filterPost.tags.join(' ');
-    return searchContent.toLowerCase().includes(searchValue.toLowerCase());
-  });
+  const filteredPosts = posts
+    ? posts.filter((filterPost) => {
+        const searchContent =
+          filterPost.header +
+          filterPost.explanation +
+          filterPost.tags.join(' ');
+        return searchContent.toLowerCase().includes(searchValue.toLowerCase());
+      })
+    : [];
   const finalPosts =
     searchValue != ''
       ? filteredPosts
@@ -40,7 +41,6 @@ export default function Posts({ posts }: DraftType) {
           (currentPage - 1) * POST_PER_PAGE,
           currentPage * POST_PER_PAGE
         );
-  const { data: session } = useSession();
   return (
     <Wrapper>
       <Head>
@@ -54,20 +54,12 @@ export default function Posts({ posts }: DraftType) {
           content='https://research-box.vercel.app/api/og'
         />
       </Head>
-      {session ? (
+      {finalPosts.length > 0 ? (
         <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
           <div className='space-y-2 pb-8 pt-6 md:space-y-5'>
-            <div className='flex items-center justify-between'>
-              <h1 className='md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-neutral-900 dark:text-neutral-100 sm:text-4xl sm:leading-10 md:text-6xl'>
-                Published
-              </h1>
-              <ButtonLink
-                href={window.location.origin + '/user/' + session.user.id}
-                leftIcon={HiExternalLink}
-              >
-                Share Link
-              </ButtonLink>
-            </div>
+            <h1 className='md:leading-14 text-3xl font-extrabold leading-9 tracking-tight text-neutral-900 dark:text-neutral-100 sm:text-4xl sm:leading-10 md:text-6xl'>
+              {selUser ? selUser.name : 'Publisher not found'}
+            </h1>
             <div className='relative max-w-lg'>
               <input
                 aria-label='Search researches'
@@ -104,6 +96,7 @@ export default function Posts({ posts }: DraftType) {
               tags={tags}
               postOrDraft='posts'
               published={false}
+              isLinked={false}
             />
           ))}
           {searchValue == '' && (
@@ -153,13 +146,9 @@ export default function Posts({ posts }: DraftType) {
           className='layout relative flex flex-col items-center justify-center py-12 text-center'
           style={{ minHeight: 'calc(100vh - 8rem' }}
         >
-          <h1 className='mt-4 dark:text-white'>You have not logged in yet</h1>
+          <h1 className='mt-4 dark:text-white'>No researches found!</h1>
           <p className='mt-2 text-sm text-neutral-800 dark:text-neutral-300'>
-            You don't need to share your email and things with me to get
-            started. Just log in here:
-          </p>
-          <p className='text-primary-600 dark:text-primary-400 mt-5 text-sm'>
-            <Button onClick={() => signIn()}>Login</Button>
+            This publisher is not found or haven't published any articles yet.
           </p>
         </div>
       )}
@@ -168,23 +157,35 @@ export default function Posts({ posts }: DraftType) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
-  if (session) {
-    const drafts = await prisma.post.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
+  const selId = ctx.query.id as string;
+  if (selId) {
+    const selUser = await prisma.user.findUnique({
       where: {
-        user: session.user,
-        published: true,
+        id: selId,
       },
     });
-    return {
-      props: { posts: JSON.parse(JSON.stringify(drafts)) },
-    };
+    if (selUser) {
+      const drafts = await prisma.post.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        where: {
+          user: selUser,
+          published: true,
+        },
+      });
+      return {
+        props: {
+          posts: JSON.parse(JSON.stringify(drafts)),
+          selUser: JSON.parse(JSON.stringify(selUser)),
+        },
+      };
+    } else {
+      return { props: {} };
+    }
   } else {
     return {
-      props: { posts: [] },
+      props: {},
     };
   }
 };

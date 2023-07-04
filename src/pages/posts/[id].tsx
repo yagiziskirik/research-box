@@ -177,10 +177,17 @@ export default function Posts({ post }: DraftType) {
                       </div>
                     </div>
                     <div className='pt-6'>
-                      {session && (
+                      {session ? (
                         <Link
                           className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
                           href='/posts'
+                        >
+                          ← Back to the researches
+                        </Link>
+                      ) : (
+                        <Link
+                          className='text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
+                          href={'/user/' + post.userId}
                         >
                           ← Back to the researches
                         </Link>
