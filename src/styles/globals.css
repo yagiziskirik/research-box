@@ -114,9 +114,8 @@
 }
 
 .scroll-bar {
-  @apply bg-primary-500 dark:bg-primary-400 fixed left-0 right-0 z-20 h-1;
-  transition: all 0.2s ease-out;
-  box-shadow: 0px 0px 5px 0.25px #0ff;
+  @apply bg-primary-500 dark:bg-primary-400 fixed left-0 right-0 z-20 h-[1.5px];
+  box-shadow: 0px 0px 3px 0.25px #0ff;
   top: 56px;
   transform: scaleX(0);
   transform-origin: 0%;

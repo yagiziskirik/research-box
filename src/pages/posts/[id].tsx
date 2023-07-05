@@ -52,7 +52,7 @@ export default function Posts({ post }: DraftType) {
   const { data: session } = useSession();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
+    stiffness: 150,
     damping: 15,
     restDelta: 0.001,
   });
