@@ -17,6 +17,16 @@ type DraftType = {
   selUser: User;
 };
 
+const getPreppedQuery = (selUser: User) => {
+  const queryDict = {
+    writer: selUser.name || 'ResearchBox',
+    title: `All of ${selUser.name}'s researches in one place`,
+    explanation: `Discover ${selUser.name}'s research prowess with ResearchBox, your go-to repository for curated insights.`,
+    imgSrc: selUser.image || 'https://research-box.vercel.app/images/Logo.jpg',
+  };
+  return new URLSearchParams(queryDict).toString();
+};
+
 const POST_PER_PAGE = 5;
 
 export default function Posts({ posts, selUser }: DraftType) {
@@ -47,13 +57,18 @@ export default function Posts({ posts, selUser }: DraftType) {
         <meta
           name='image'
           property='og:image'
-          content='https://research-box.vercel.app/api/og'
+          content={
+            'https://research-box.vercel.app/api/og?' + getPreppedQuery(selUser)
+          }
         />
         <meta
           name='twitter:image'
-          content='https://research-box.vercel.app/api/og'
+          content={
+            'https://research-box.vercel.app/api/og?' + getPreppedQuery(selUser)
+          }
         />
       </Head>
+
       {finalPosts.length > 0 ? (
         <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
           <div className='space-y-2 pb-8 pt-6 md:space-y-5'>
