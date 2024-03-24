@@ -230,7 +230,7 @@ export default function Posts({ post }: DraftType) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const selId = ctx.query.id as string;
-  const post = await prisma.post.findUnique({
+  let post = await prisma.post.findUnique({
     where: {
       id: selId,
     },
@@ -238,6 +238,26 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       user: true,
     },
   });
+  if (!post) {
+    const posts = await prisma.post.findMany({
+      include: {
+        user: true,
+      },
+    });
+    for (let i = 0; i < posts.length; i++) {
+      if (
+        encodeURIComponent(
+          posts[i].header
+            .replace(/[^a-zA-Z0-9 - _ . ~]/g, '')
+            .replace(/ /g, '-')
+            .toLowerCase()
+        ) === selId
+      ) {
+        post = posts[i];
+        break;
+      }
+    }
+  }
   if (post && post.published) {
     return {
       props: { post: JSON.parse(JSON.stringify(post)) },

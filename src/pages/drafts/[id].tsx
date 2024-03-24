@@ -27,6 +27,7 @@ import Interval from '@/components/Autosave';
 import Button from '@/components/buttons/Button';
 import IconButton from '@/components/buttons/IconButton';
 import Editor from '@/components/Editor';
+import Unsplash from '@/components/UnsplashApi';
 import Wrapper from '@/components/wrapper';
 
 type DraftType = {
@@ -285,6 +286,7 @@ export default function Draft({ draft }: DraftType) {
               autocomplete
             />
           </div>
+          <Unsplash />
           <Editor content={content} setContent={setContentFunc} />
           <div className='mt-24 flex justify-end gap-2 md:mt-14'>
             <Button

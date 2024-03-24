@@ -55,6 +55,15 @@ export default function ArticleCard({
               <Link
                 className='text-neutral-900 dark:text-neutral-100'
                 href={'/' + postOrDraft + '/' + id}
+                as={
+                  postOrDraft === 'posts'
+                    ? `/posts/${encodeURIComponent(
+                        header
+                          .replace(/[^a-zA-Z0-9 - _ . ~]/g, '')
+                          .replace(/ /g, '-')
+                      ).toLowerCase()}`
+                    : `/${postOrDraft}/${id}`
+                }
               >
                 {header}
               </Link>
