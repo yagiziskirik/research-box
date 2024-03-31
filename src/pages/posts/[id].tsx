@@ -77,6 +77,7 @@ export default function Posts({ post }: DraftType) {
                 getPreppedQuery(post)
               }
             />
+            <title>{`${post.header} - Research Box`}</title>
           </Head>
           <motion.div className='scroll-bar' style={{ scaleX }} />
           <div className='mx-auto max-w-3xl px-4 pt-0 dark:text-white sm:px-6 md:pt-10 xl:max-w-5xl xl:px-0'>
